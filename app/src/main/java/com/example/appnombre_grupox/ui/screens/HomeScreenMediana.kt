@@ -1,4 +1,4 @@
-package com.example.appnombre_grupox.ui
+package com.example.appnombre_grupox.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DrawerValue.Closed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -38,7 +37,6 @@ import androidx.compose.ui.Modifier
 import com.example.appnombre_grupox.R
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,8 +47,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier,
+fun HomeScreenMediana(
     navController: NavController,
     viewModel: MainViewModel = viewModel()
 ) {
@@ -77,7 +74,7 @@ fun HomeScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Mi App Kotlin") },
+                    title = { Text("Mi App Kotlin MEDIANA") },
                     // Uso correcto de TopAppBarDefaults.smallTopAppBarColors (Material3)
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -97,7 +94,7 @@ fun HomeScreen(
         ) { innerPadding ->
             // Column principal: espaciado uniforme vertical y centrado horizontal
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
                     .padding(16.dp),

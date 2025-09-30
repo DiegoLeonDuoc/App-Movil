@@ -1,4 +1,4 @@
-package com.example.appnombre_grupox.ui
+package com.example.appnombre_grupox.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
