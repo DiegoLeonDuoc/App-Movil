@@ -67,6 +67,22 @@ fun HomeScreen(
                         viewModel.navigateTo(Screen.Profile)
                     }
                 )
+                NavigationDrawerItem(
+                    label = { Text("Registro") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        viewModel.navigateTo(Screen.Registro)
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Configuración") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        viewModel.navigateTo(Screen.Settings)
+                    }
+                )
             }
         }
     ) {

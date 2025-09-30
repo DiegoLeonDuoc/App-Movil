@@ -12,11 +12,11 @@ class UsuarioViewModel: ViewModel() {
     // Estado interno mutable
     private val _estado = MutableStateFlow(UsuarioUiState())
 
-    // Estado expuesto para la UI
+    // Estado expuesto a la UI
     val estado: StateFlow<UsuarioUiState> = _estado
 
-    // Actualiza nombre y limpia el error
-    fun onNombreChange(valor: String) {
+    // Actualiza el campo nombre y limpia su error
+    fun onNombreChange(valor:String){
         _estado.update {
             it.copy(
                 nombre = valor,
@@ -25,8 +25,8 @@ class UsuarioViewModel: ViewModel() {
         }
     }
 
-    // Actualiza correo y limpia el error
-    fun onCorreoChange(valor: String) {
+    // Actualiza el campo correo y limpia su error
+    fun onCorreoChange(valor:String){
         _estado.update {
             it.copy(
                 correo = valor,
@@ -35,8 +35,8 @@ class UsuarioViewModel: ViewModel() {
         }
     }
 
-    // Actualiza clave y limpia el error
-    fun onClaveChange(valor: String) {
+    // Actualiza el campo clave y limpia su error
+    fun onClaveChange(valor:String){
         _estado.update {
             it.copy(
                 clave = valor,
@@ -45,8 +45,8 @@ class UsuarioViewModel: ViewModel() {
         }
     }
 
-    // Actualiza dirección y limpia el error
-    fun onDireccionChange(valor: String) {
+    // Actualiza el campo direccion y limpia su error
+    fun onDireccionChange(valor:String){
         _estado.update {
             it.copy(
                 direccion = valor,
@@ -55,8 +55,8 @@ class UsuarioViewModel: ViewModel() {
         }
     }
 
-    // Actualiza checkbox de términos y limpia el error
-    fun onAceptarTerminosChange(valor: Boolean) {
+    // Actualiza el checkbox de términos y condiciones
+    fun onAceptarTerminosChange(valor:Boolean){
         _estado.update {
             it.copy(
                 aceptaTerminos = valor
@@ -64,27 +64,26 @@ class UsuarioViewModel: ViewModel() {
         }
     }
 
-    // Validación global de formulario
+    // Valida el formulario válido
     fun validarFormulario(): Boolean {
-        val estadoActual= _estado.value
+        val estadoActual = _estado.value
         val errores = UsuarioErrores(
-            nombre = if (estadoActual.nombre.isBlank()) "Campo obligatorio" else null,
-            correo = if (!estadoActual.correo.contains("@")) "Correo electrónico no válido" else null,
-            clave = if (estadoActual.clave.length < 8) "Clave debe tener al menos 8 caracteres" else null,
-            direccion = if (estadoActual.direccion.isBlank()) "Campo obligatorio" else null,
+            nombre = if (estadoActual.nombre.isBlank()) "El nombre es requerido" else null,
+            correo = if (estadoActual.correo.isBlank()) "El correo es requerido" else if (!estadoActual.correo.contains("@")) "El correo no es válido" else null,
+            clave = if (estadoActual.clave.isBlank()) "La clave es requerida" else if (estadoActual.clave.length < 6) "La clave debe tener al menos 6 caracteres" else null,
+            direccion = if (estadoActual.direccion.isBlank()) "La dirección es requerida" else null
         )
 
         val hayErrores = listOfNotNull(
             errores.nombre,
             errores.correo,
             errores.clave,
-            errores.direccion,
+            errores.direccion
         ).isNotEmpty()
 
-        _estado.update {
-            it.copy(errores = errores)
-        }
+        _estado.update { it.copy(errores = errores) }
 
         return !hayErrores
     }
+
 }

@@ -15,6 +15,10 @@ sealed class Screen(val route: String) {
 
     data object Settings : Screen(route = "settings_page")
 
+    data object Resumen : Screen(route = "resumen_page")
+
+    data object Registro : Screen(route = "registro_page")
+
     // Ejemplos de Rutas con Argumentos (No usados en este ejercicio, pero importante)
     // Usamos 'data class' para encapsular los argumentos.
     // Esto asegura que, al navegar, los argumentos correctos sean pasados y tipados.
