@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.appnombre_grupox"
+    namespace = "com.example.teamusic_grupo11"
     compileSdk = 36
 
     defaultConfig {
