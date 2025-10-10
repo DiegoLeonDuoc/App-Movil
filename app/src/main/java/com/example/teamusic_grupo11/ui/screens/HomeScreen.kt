@@ -41,9 +41,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.example.teamusic_grupo11.navigation.NavigationEvent
 import com.example.teamusic_grupo11.navigation.Screen
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
+import com.example.teamusic_grupo11.ui.components.BottomBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,6 +106,20 @@ fun HomeScreen(
                             scope.launch { drawerState.open() }
                         }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menú")
+                        }
+                    }
+                )
+            },
+            bottomBar = {
+                BottomBar(
+                    currentDestination = navController.currentDestination?.route,
+                    onNavigate = {
+                        navController.navigate(it) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 )
@@ -195,6 +212,8 @@ fun HomeScreen(
                 // Spacer flexible para empujar el contenido hacia arriba si hay espacio extra
                 Spacer(modifier = Modifier.weight(1f))
             }
+
+
         }
     }
 }

@@ -8,16 +8,18 @@ sealed class Screen(val route: String) {
     // Si usas una versión anterior de Kotlin, usa 'object' en su lugar.
 
     // Representa la ruta a la pantalla de Inicio.
-    data object Home : Screen(route = "home_page")
+    data object Home : Screen(route = "home")
 
     // Representa la ruta a la pantalla de Configuración.
-    data object Profile : Screen(route = "profile_page")
+    data object Profile : Screen(route = "profile")
 
-    data object Settings : Screen(route = "settings_page")
+    data object Settings : Screen(route = "settings")
 
-    data object Resumen : Screen(route = "resumen_page")
+    data object Explore : Screen(route = "explorar")
 
-    data object Registro : Screen(route = "registro_page")
+    data object Resumen : Screen(route = "resumen")
+
+    data object Registro : Screen(route = "registro ")
 
     // Ejemplos de Rutas con Argumentos (No usados en este ejercicio, pero importante)
     // Usamos 'data class' para encapsular los argumentos.

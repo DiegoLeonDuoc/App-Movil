@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.teamusic_grupo11.ui.screens.ExplorarScreen
 import com.example.teamusic_grupo11.ui.screens.HomeScreen
 import com.example.teamusic_grupo11.ui.screens.ProfileScreen
 import com.example.teamusic_grupo11.ui.screens.RegistroScreen
@@ -71,6 +72,9 @@ fun AppNavigation() {
         }
         composable(Screen.Registro.route) {
             RegistroScreen(navController,usuarioViewModel)
+        }
+        composable(Screen.Explore.route) {
+            ExplorarScreen(navController, viewModel = viewModel)
         }
     }
 }
