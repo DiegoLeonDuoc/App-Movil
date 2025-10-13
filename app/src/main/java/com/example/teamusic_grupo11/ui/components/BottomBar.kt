@@ -1,65 +1,43 @@
 package com.example.teamusic_grupo11.ui.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.teamusic_grupo11.navigation.Screen
 
 // BottomBar.kt
 @Composable
 fun BottomBar(
-    currentDestination: String?,
-    onNavigate: (String) -> Unit
+    navController: NavController,
+    currentDestination: NavDestination?
 ) {
     NavigationBar {
-        val items = listOf(
-            BottomNavItem(
-                route = Screen.Home.route,
-                title = "Inicio",
-                icon = Icons.Default.Home,
-                contentDescription = "Pantalla de inicio"
-            ),
-            BottomNavItem(
-                route = Screen.Explore.route,
-                title = "Explorar",
-                icon = Icons.Default.Search,
-                contentDescription = "Pantalla de exploración"
-            ),
-            BottomNavItem(
-                route = Screen.Profile.route,
-                title = "Perfil",
-                icon = Icons.Default.Person,
-                contentDescription = "Pantalla de perfil"
-            )
-        )
-
-        items.forEach { item ->
+        val items = listOf(Screen.Home, Screen.Explore, Screen.Settings)
+        items.forEach { screen ->
             NavigationBarItem(
-                selected = currentDestination == item.route,
-                onClick = { onNavigate(item.route) },
+                selected = currentDestination?.route == screen.route,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                    }
+                },
                 icon = {
                     Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.contentDescription
+                        imageVector = screen.icon,
+                        contentDescription = screen.label
                     )
                 },
-                label = { Text(text = item.title) },
-                alwaysShowLabel = true
+                label = { Text(text = screen.label) }
             )
         }
     }
 }
-
-data class BottomNavItem(
-    val route: String,
-    val title: String,
-    val icon: ImageVector,
-    val contentDescription: String
-)

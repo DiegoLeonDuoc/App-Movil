@@ -53,12 +53,6 @@ fun AppNavigation() {
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(route = Screen.Home.route) {
-//            val windowsSizeClass = obtenerWindowSizeClass()
-//            when (windowsSizeClass.widthSizeClass) {
-//                WindowWidthSizeClass.Compact -> HomeScreenCompacta(navController = navController, viewModel = viewModel)
-//                WindowWidthSizeClass.Medium -> HomeScreenMediana(navController = navController, viewModel = viewModel)
-//                WindowWidthSizeClass.Expanded -> HomeScreen(navController = navController, viewModel = viewModel)
-//            }
             HomeScreen(navController = navController, viewModel = viewModel)
         }
         composable(route = Screen.Profile.route) {

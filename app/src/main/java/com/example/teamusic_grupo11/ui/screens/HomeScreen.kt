@@ -1,5 +1,6 @@
 package com.example.teamusic_grupo11.ui.screens
 
+import androidx.compose.animation.expandHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,13 +12,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue.Closed
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,13 +32,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.teamusic_grupo11.R
@@ -41,11 +54,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.Navigation
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.teamusic_grupo11.navigation.NavigationEvent
 import com.example.teamusic_grupo11.navigation.Screen
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
+
 import com.example.teamusic_grupo11.ui.components.BottomBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,6 +72,8 @@ fun HomeScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = Closed)
     val scope = rememberCoroutineScope()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry?.destination
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -107,22 +125,21 @@ fun HomeScreen(
                         }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menú")
                         }
-                    }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            viewModel.navigateTo(Screen.Settings)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Acceso a perfil"
+                            )
+                        }
+                    },
                 )
             },
             bottomBar = {
-                BottomBar(
-                    currentDestination = navController.currentDestination?.route,
-                    onNavigate = {
-                        navController.navigate(it) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                )
+                 BottomBar(navController, currentDestination)
             }
         ) { innerPadding ->
             // Column principal: espaciado uniforme vertical y centrado horizontal
@@ -217,9 +234,3 @@ fun HomeScreen(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun HomeScreenPreview() {
-//    HomeScreen()
-//}
