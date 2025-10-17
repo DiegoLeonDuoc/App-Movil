@@ -1,14 +1,18 @@
 package com.example.teamusic_grupo11.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.teamusic_grupo11.ui.screens.BibliotecaScreen
 import com.example.teamusic_grupo11.ui.screens.ExplorarScreen
 import com.example.teamusic_grupo11.ui.screens.HomeScreen
 import com.example.teamusic_grupo11.ui.screens.ProfileScreen
@@ -25,6 +29,8 @@ fun AppNavigation() {
     val navController = rememberNavController()
     val usuarioViewModel: UsuarioViewModel = viewModel()
     val innerPadding = 16.dp
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.collectLatest { event ->
@@ -53,7 +59,7 @@ fun AppNavigation() {
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(route = Screen.Home.route) {
-            HomeScreen(navController = navController, viewModel = viewModel)
+            HomeScreen(navController = navController, viewModel = viewModel, drawerState, scope)
         }
         composable(route = Screen.Profile.route) {
             ProfileScreen(navController = navController, viewModel = viewModel)
@@ -65,10 +71,13 @@ fun AppNavigation() {
             ResumenScreen(usuarioViewModel)
         }
         composable(Screen.Registro.route) {
-            RegistroScreen(navController,usuarioViewModel)
+            RegistroScreen(navController,usuarioViewModel, viewModel, drawerState, scope)
         }
         composable(Screen.Explore.route) {
-            ExplorarScreen(navController, viewModel = viewModel)
+            ExplorarScreen(navController, viewModel = viewModel, drawerState, scope)
+        }
+        composable(Screen.Library.route) {
+            BibliotecaScreen(navController, viewModel, drawerState, scope)
         }
     }
 }

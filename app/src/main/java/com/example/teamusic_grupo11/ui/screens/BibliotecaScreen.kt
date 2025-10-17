@@ -1,14 +1,14 @@
 package com.example.teamusic_grupo11.ui.screens
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
@@ -16,9 +16,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.teamusic_grupo11.navigation.Screen
@@ -27,10 +30,12 @@ import com.example.teamusic_grupo11.ui.components.TopBar
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.example.teamusic_grupo11.ui.components.DialogFuncionPendiente
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
+
 @Composable
-fun ExplorarScreen(
+fun BibliotecaScreen(
     navController: NavController,   // Controlador de navegación para moverse entre pantallas
     viewModel: MainViewModel,        // ViewModel que centraliza la navegación
     drawerState: DrawerState,
@@ -39,6 +44,7 @@ fun ExplorarScreen(
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination
+    var showDialog by remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -46,7 +52,7 @@ fun ExplorarScreen(
             ModalDrawerSheet {
                 Text("Menú", modifier = Modifier.padding(16.dp))
                 NavigationDrawerItem(
-                    label = { Text("Perfil")},
+                    label = { Text("Perfil") },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -76,38 +82,30 @@ fun ExplorarScreen(
         Scaffold(
             topBar = { TopBar(viewModel, drawerState, scope) },
             bottomBar = { BottomBar(navController, currentDestination) }
-        ) {
-            // Estructura visual centralizada
-            Column(
+        ) { innerPadding ->
+
+            Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                            .padding(innerPadding)
+                            .horizontalScroll(rememberScrollState())
             ) {
-                // Título
-                Text(text = "Pantalla de configuración")
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Botón para volver a home
-                Button(
-                    onClick = {
-                        viewModel.navigateTo(Screen.Home)
+                val bloques = listOf("Lista de reproducción", "Canciones", "Álbumes", "Artistas")
+                bloques.forEach { bloque ->
+                    Button(
+                        onClick = {
+                            showDialog = true
+                        }
+                    ) {
+                        Text(bloque, color = MaterialTheme.colorScheme.onPrimary)
                     }
-                ) {
-                    Text("Volver al Inicio")
                 }
-                Spacer(modifier = Modifier.height(16.dp))
 
-                // Botón para ir al perfil
-                Button(
-                    onClick = {
-                        viewModel.navigateTo(Screen.Profile)
-                    }
-                ) {
-                    Text("Ir al Perfil")
-                }
             }
+
+            DialogFuncionPendiente(
+                show = showDialog,
+                onDismiss = { showDialog = false }
+            )
         }
     }
 }

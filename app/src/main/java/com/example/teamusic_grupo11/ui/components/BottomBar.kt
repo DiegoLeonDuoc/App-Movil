@@ -17,7 +17,7 @@ fun BottomBar(
     currentDestination: NavDestination?
 ) {
     NavigationBar {
-        val items = listOf(Screen.Home, Screen.Explore, Screen.Settings)
+        val items = listOf(Screen.Home, Screen.Explore, Screen.Library)
         items.forEach { screen ->
             NavigationBarItem(
                 selected = currentDestination?.route == screen.route,

@@ -45,16 +45,6 @@ class UsuarioViewModel: ViewModel() {
         }
     }
 
-    // Actualiza el campo direccion y limpia su error
-    fun onDireccionChange(valor:String){
-        _estado.update {
-            it.copy(
-                direccion = valor,
-                errores = it.errores.copy(direccion = null)
-            )
-        }
-    }
-
     // Actualiza el checkbox de términos y condiciones
     fun onAceptarTerminosChange(valor:Boolean){
         _estado.update {
@@ -66,19 +56,24 @@ class UsuarioViewModel: ViewModel() {
 
     // Valida el formulario válido
     fun validarFormulario(): Boolean {
+        val correoRegex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
         val estadoActual = _estado.value
         val errores = UsuarioErrores(
             nombre = if (estadoActual.nombre.isBlank()) "El nombre es requerido" else null,
-            correo = if (estadoActual.correo.isBlank()) "El correo es requerido" else if (!estadoActual.correo.contains("@")) "El correo no es válido" else null,
+            correo =
+                if (estadoActual.correo.isBlank()) {
+                    "El correo es requerido"
+                }
+                else if (!correoRegex.matches(estadoActual.correo)) {
+                    "El correo no es válido"
+                } else null,
             clave = if (estadoActual.clave.isBlank()) "La clave es requerida" else if (estadoActual.clave.length < 6) "La clave debe tener al menos 6 caracteres" else null,
-            direccion = if (estadoActual.direccion.isBlank()) "La dirección es requerida" else null
         )
 
         val hayErrores = listOfNotNull(
             errores.nombre,
             errores.correo,
             errores.clave,
-            errores.direccion
         ).isNotEmpty()
 
         _estado.update { it.copy(errores = errores) }

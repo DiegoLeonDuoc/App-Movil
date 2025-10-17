@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue.Closed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -63,15 +64,17 @@ import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 import com.example.teamusic_grupo11.ui.components.BottomBar
+import com.example.teamusic_grupo11.ui.components.TopBar
+import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: MainViewModel = viewModel()
+    viewModel: MainViewModel = viewModel(),
+    drawerState: DrawerState,
+    scope: CoroutineScope
 ) {
-    val drawerState = rememberDrawerState(initialValue = Closed)
-    val scope = rememberCoroutineScope()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination
 
@@ -110,33 +113,7 @@ fun HomeScreen(
         // Root scaffold: TopAppBar + body content (respects system insets provided by Scaffold)
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text("Mi App Kotlin") },
-                    // Uso correcto de TopAppBarDefaults.smallTopAppBarColors (Material3)
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch { drawerState.open() }
-                        }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menú")
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = {
-                            viewModel.navigateTo(Screen.Settings)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Acceso a perfil"
-                            )
-                        }
-                    },
-                )
+                TopBar(viewModel, drawerState, scope)
             },
             bottomBar = {
                  BottomBar(navController, currentDestination)

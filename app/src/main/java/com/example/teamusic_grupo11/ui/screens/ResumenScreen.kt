@@ -20,7 +20,6 @@ fun ResumenScreen(viewModel: UsuarioViewModel) {
         Text("Nombre: ${estado.nombre}")
         Text("Correo: ${estado.correo}")
         Text("Clave: ${estado.clave}")
-        Text("Dirección: ${estado.direccion}")
         Text("Términos: ${if (estado.aceptaTerminos) "Aceptados" else "No aceptados"}")
     }
 }
