@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.teamusic_grupo11.dataDAO.Song
 @Composable
 fun CuadroCancion(
@@ -43,7 +44,7 @@ fun CuadroCancion(
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
             Image(
-                painter = painterResource(id = song.imageRes),
+                painter = rememberAsyncImagePainter(song.imageRes),
                 contentDescription = song.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
