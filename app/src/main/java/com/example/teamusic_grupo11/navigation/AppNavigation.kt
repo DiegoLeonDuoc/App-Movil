@@ -1,13 +1,10 @@
 package com.example.teamusic_grupo11.navigation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,7 +25,6 @@ fun AppNavigation() {
     val viewModel: MainViewModel = viewModel()
     val navController = rememberNavController()
     val usuarioViewModel: UsuarioViewModel = viewModel()
-    val innerPadding = 16.dp
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -55,8 +51,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
-        modifier = Modifier.padding(innerPadding)
+        startDestination = Screen.Home.route
     ) {
         composable(route = Screen.Home.route) {
             HomeScreen(navController = navController, viewModel = viewModel, drawerState, scope)

@@ -1,69 +1,38 @@
 package com.example.teamusic_grupo11.ui.screens
 
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Explore
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue.Closed
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.teamusic_grupo11.R
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.Navigation
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.teamusic_grupo11.navigation.NavigationEvent
+import com.example.teamusic_grupo11.data.Songs
 import com.example.teamusic_grupo11.navigation.Screen
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 import com.example.teamusic_grupo11.ui.components.BottomBar
+import com.example.teamusic_grupo11.ui.components.GridCanciones
+import com.example.teamusic_grupo11.ui.components.RowCanciones
+import com.example.teamusic_grupo11.ui.components.RowCancionesDoble
 import com.example.teamusic_grupo11.ui.components.TopBar
 import kotlinx.coroutines.CoroutineScope
 
@@ -84,7 +53,7 @@ fun HomeScreen(
             ModalDrawerSheet {
                 Text("Menú", modifier = Modifier.padding(16.dp))
                 NavigationDrawerItem(
-                    label = { Text("Perfil")},
+                    label = { Text("Perfil") },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -110,104 +79,82 @@ fun HomeScreen(
             }
         }
     ) {
-        // Root scaffold: TopAppBar + body content (respects system insets provided by Scaffold)
         Scaffold(
             topBar = {
                 TopBar(viewModel, drawerState, scope)
             },
             bottomBar = {
-                 BottomBar(navController, currentDestination)
+                BottomBar(navController, currentDestination)
             }
         ) { innerPadding ->
-            // Column principal: espaciado uniforme vertical y centrado horizontal
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp), // espaciado uniforme entre hijos
-                horizontalAlignment = Alignment.CenterHorizontally // alinear hijos horizontalmente al centro
+            LazyColumn(
+                contentPadding = innerPadding,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.fillMaxSize()
             ) {
-                // Encabezado de bienvenida usando tipografía y colores del tema
-                Text(
-                    text = "Bienvenido!",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                item {
+                    Text(
+                        text = "Bienvenido!",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
 
-                // Card demostrativa con icono y texto (comprueba elevación y colores)
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(), // elevación por defecto
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Info",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(28.dp)
-                        )
-                        Spacer(modifier = Modifier.size(8.dp))
-                        Text(
-                            text = "Tarjeta de ejemplo: icono + texto.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
+                item {
+                    Text(
+                        text = "Selección rápida",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
+                item {
+                    GridCanciones(Songs()) { clickedSong ->
+                        Log.d("SongClick", "Clicked ${clickedSong.title}")
                     }
                 }
 
-                // Botón de interacción principal
-                Button(
-                    onClick = { viewModel.navigateTo(Screen.Settings) },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Ir a configuración", color = MaterialTheme.colorScheme.onPrimary)
-                }
-
-                // Imagen principal (asegúrate que R.drawable.logo sea PNG/JPG/WEBP o VectorDrawable XML)
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = "Logo App",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp),
-                    contentScale = ContentScale.Fit
-                )
-
-                // Fila de estado adicional para comprobar alineación/colores
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.06f))
-                        .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                item {
                     Text(
-                        text = "Estado: Activo",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    Text(
-                        text = "v1.0.0",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onBackground
+                        text = "Seguir escuchando",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
-                // Spacer flexible para empujar el contenido hacia arriba si hay espacio extra
-                Spacer(modifier = Modifier.weight(1f))
+                item {
+                    RowCancionesDoble(Songs(), size = 100.dp) { clickedSong ->
+                        Log.d("SongClick", "Clicked ${clickedSong.title}")
+                    }
+                }
+
+                item {
+                    Text(
+                        text = "Recomendados",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
+                item {
+                    RowCanciones(Songs(), size = 100.dp) { clickedSong ->
+                        Log.d("SongClick", "Clicked ${clickedSong.title}")
+                    }
+                }
+
+                item {
+                    RowCanciones(Songs(), size = 100.dp) { clickedSong ->
+                        Log.d("SongClick", "Clicked ${clickedSong.title}")
+                    }
+                }
+
+
+
+                // Optional spacer at the bottom
+                item { Spacer(modifier = Modifier.height(16.dp)) }
             }
-
-
         }
     }
 }
