@@ -31,8 +31,8 @@ import com.example.teamusic_grupo11.viewmodel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    navController: NavController,   // Controlador de navegación para moverse entre pantallas
-    viewModel: MainViewModel        // ViewModel que centraliza la navegación
+    navController: NavController,
+    viewModel: MainViewModel
 ) {
     val settingsOptions = listOf(
         "Apariencia",
@@ -45,6 +45,7 @@ fun SettingsScreen(
         "Acerca de",
         "Contacto"
     )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -63,14 +64,13 @@ fun SettingsScreen(
             )
         }
     ) { innerPadding ->
-        IconButton(onClick = {
-            viewModel.navigateTo(Screen.Settings)
-        }) {
+        IconButton(onClick = { /* abrir perfil u otra acción */ }) {
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = "Acceso a perfil"
             )
         }
+
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
@@ -81,7 +81,19 @@ fun SettingsScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { /* TODO: Handle click for $setting */ }
+                            .clickable {
+                                when (setting) {
+                                    "Apariencia" -> {
+                                        navController.navigate(Screen.Appearance.route) {
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                    "Cuenta" -> {
+                                    }
+                                    else -> {
+                                    }
+                                }
+                            }
                             .padding(vertical = 16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {

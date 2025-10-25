@@ -16,6 +16,7 @@ import com.example.teamusic_grupo11.ui.screens.ProfileScreen
 import com.example.teamusic_grupo11.ui.screens.RegistroScreen
 import com.example.teamusic_grupo11.ui.screens.ResumenScreen
 import com.example.teamusic_grupo11.ui.screens.SettingsScreen
+import com.example.teamusic_grupo11.ui.screens.AppearanceScreen
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import com.example.teamusic_grupo11.viewmodel.UsuarioViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -61,6 +62,9 @@ fun AppNavigation() {
         }
         composable(route = Screen.Settings.route) {
             SettingsScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(route = Screen.Appearance.route) {
+            AppearanceScreen(navController = navController, viewModel = viewModel)
         }
         composable(route=Screen.Resumen.route) {
             ResumenScreen(usuarioViewModel)

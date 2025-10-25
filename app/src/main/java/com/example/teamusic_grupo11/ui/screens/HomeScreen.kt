@@ -1,6 +1,7 @@
 package com.example.teamusic_grupo11.ui.screens
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,14 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -50,10 +51,16 @@ fun HomeScreen(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
-                Text("Menú", modifier = Modifier.padding(16.dp))
+            ModalDrawerSheet(
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            ) {
+                Text(
+                    "Menú",
+                    modifier = Modifier.padding(16.dp),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 NavigationDrawerItem(
-                    label = { Text("Perfil") },
+                    label = { Text("Perfil", color = MaterialTheme.colorScheme.onSurface) },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -61,7 +68,7 @@ fun HomeScreen(
                     }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Registro") },
+                    label = { Text("Registro", color = MaterialTheme.colorScheme.onSurface) },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -69,7 +76,7 @@ fun HomeScreen(
                     }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Configuración") },
+                    label = { Text("Configuración", color = MaterialTheme.colorScheme.onSurface) },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -85,18 +92,22 @@ fun HomeScreen(
             },
             bottomBar = {
                 BottomBar(navController, currentDestination)
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onBackground
         ) { innerPadding ->
             LazyColumn(
                 contentPadding = innerPadding,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background) // fondo aplicado
             ) {
                 item {
                     Text(
                         text = "Bienvenido!",
                         style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -106,7 +117,8 @@ fun HomeScreen(
                     Text(
                         text = "Selección rápida",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(start = (12).dp)
                     )
                 }
 
@@ -120,7 +132,8 @@ fun HomeScreen(
                     Text(
                         text = "Seguir escuchando",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(start = (12).dp)
                     )
                 }
 
@@ -150,9 +163,6 @@ fun HomeScreen(
                     }
                 }
 
-
-
-                // Optional spacer at the bottom
                 item { Spacer(modifier = Modifier.height(16.dp)) }
             }
         }

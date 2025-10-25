@@ -3,21 +3,26 @@ package com.example.teamusic_grupo11
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.ExperimentalMaterial3Api
-import com.example.teamusic_grupo11.navigation.AppNavigation
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.teamusic_grupo11.ui.theme.TeaMusic_Grupo11Theme
+import com.example.teamusic_grupo11.navigation.AppNavigation
+import com.example.teamusic_grupo11.viewmodel.MainViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 
-@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            TeaMusic_Grupo11Theme {
+            val mainViewModel: MainViewModel = viewModel()
+            val darkTheme by mainViewModel.darkTheme.collectAsState()
+            TeaMusic_Grupo11Theme(darkTheme = darkTheme, dynamicColor = false) {
+                AppNavigation()
+            }
+
+            TeaMusic_Grupo11Theme(darkTheme = darkTheme, dynamicColor = false) {
                 AppNavigation()
             }
         }
     }
 }
-
