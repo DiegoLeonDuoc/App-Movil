@@ -32,6 +32,7 @@ import com.example.teamusic_grupo11.viewmodel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen (
+    navController: NavController,
     viewModel: MainViewModel = viewModel()
 ) {
     val items = listOf(Screen.Home, Screen.Profile)

@@ -24,6 +24,7 @@ import com.example.teamusic_grupo11.viewmodel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileEditScreen(
+    navController: NavController,
     viewModel: MainViewModel,
     uiState: UsuarioUiState
 ) {
