@@ -61,10 +61,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun toggleTheme() {
-        setDarkTheme(!_darkTheme.value)
-    }
-
     fun onNewImageSelected(uri: Uri?) {
         _uiState.update { it.copy(newSelectedImageUri = uri) }
     }
@@ -104,9 +100,4 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun navigateUp() {
-        viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateUp)
-        }
-    }
 }
