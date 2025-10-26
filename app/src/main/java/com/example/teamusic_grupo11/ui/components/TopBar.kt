@@ -43,7 +43,7 @@ fun TopBar(
         },
         actions = {
             IconButton(onClick = {
-                viewModel.navigateTo(Screen.Settings)
+                viewModel.navigateTo(Screen.Profile)
             }) {
                 Icon(
                     imageVector = Icons.Default.Person,

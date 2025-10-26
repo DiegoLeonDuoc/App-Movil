@@ -1,5 +1,6 @@
 package com.example.teamusic_grupo11.ui.state
 
+import android.net.Uri
 import com.example.teamusic_grupo11.ui.validation.UsuarioErrores
 
 data class UsuarioUiState(
@@ -8,5 +9,7 @@ data class UsuarioUiState(
     val clave: String = "",
     val direccion: String = "",
     val aceptaTerminos: Boolean = false,
-    val errores: UsuarioErrores = UsuarioErrores()
+    val errores: UsuarioErrores = UsuarioErrores(),
+    val savedProfileImageUri: String? = null,
+    val newSelectedImageUri: Uri? = null
 )

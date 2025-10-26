@@ -118,7 +118,7 @@ fun HomeScreen(
                         text = "Selección rápida",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(start = (12).dp)
+                        modifier = Modifier.padding(start = (15).dp)
                     )
                 }
 
@@ -133,7 +133,7 @@ fun HomeScreen(
                         text = "Seguir escuchando",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(start = (12).dp)
+                        modifier = Modifier.padding(start = (15).dp)
                     )
                 }
 

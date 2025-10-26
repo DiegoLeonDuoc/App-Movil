@@ -9,6 +9,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+// --- 1. IMPORTA LO NUEVO ---
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.example.teamusic_grupo11.ui.screens.ProfileEditScreen
+// --- (fin imports) ---
 import com.example.teamusic_grupo11.ui.screens.BibliotecaScreen
 import com.example.teamusic_grupo11.ui.screens.ExplorarScreen
 import com.example.teamusic_grupo11.ui.screens.HomeScreen
@@ -22,15 +27,16 @@ import com.example.teamusic_grupo11.viewmodel.UsuarioViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun AppNavigation() {
-    val viewModel: MainViewModel = viewModel()
+fun AppNavigation(mainViewModel: MainViewModel) { // <-- Este es el ViewModel BUENO
+    // val viewModel: MainViewModel = viewModel() // <-- 2. BORRA ESTA LÍNEA (Este era el ViewModel MALO)
     val navController = rememberNavController()
-    val usuarioViewModel: UsuarioViewModel = viewModel()
+    val usuarioViewModel: UsuarioViewModel = viewModel() // Este está bien, es otro ViewModel
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.navigationEvents.collectLatest { event ->
+        // 3. Usa el ViewModel BUENO
+        mainViewModel.navigationEvents.collectLatest { event ->
             when (event) {
                 is NavigationEvent.NavigateTo -> {
                     navController.navigate(event.route.route) {
@@ -54,29 +60,43 @@ fun AppNavigation() {
         navController = navController,
         startDestination = Screen.Home.route
     ) {
+        // 4. Asegúrate de que TODAS las pantallas usen 'mainViewModel'
         composable(route = Screen.Home.route) {
-            HomeScreen(navController = navController, viewModel = viewModel, drawerState, scope)
+            HomeScreen(navController = navController, viewModel = mainViewModel, drawerState, scope)
         }
         composable(route = Screen.Profile.route) {
-            ProfileScreen(navController = navController, viewModel = viewModel)
+            ProfileScreen(navController = navController, viewModel = mainViewModel)
         }
         composable(route = Screen.Settings.route) {
-            SettingsScreen(navController = navController, viewModel = viewModel)
+            SettingsScreen(navController = navController, viewModel = mainViewModel)
         }
         composable(route = Screen.Appearance.route) {
-            AppearanceScreen(navController = navController, viewModel = viewModel)
+            AppearanceScreen(navController = navController, viewModel = mainViewModel)
         }
         composable(route=Screen.Resumen.route) {
             ResumenScreen(usuarioViewModel)
         }
         composable(Screen.Registro.route) {
-            RegistroScreen(navController,usuarioViewModel, viewModel, drawerState, scope)
+            RegistroScreen(navController,usuarioViewModel, mainViewModel, drawerState, scope)
         }
         composable(Screen.Explore.route) {
-            ExplorarScreen(navController, viewModel = viewModel, drawerState, scope)
+            ExplorarScreen(navController, viewModel = mainViewModel, drawerState, scope)
         }
         composable(Screen.Library.route) {
-            BibliotecaScreen(navController, viewModel, drawerState, scope)
+            BibliotecaScreen(navController, mainViewModel, drawerState, scope)
+        }
+
+        // --- 5. AÑADE ESTE BLOQUE AL FINAL ---
+        composable(route = Screen.ProfileEdit.route) {
+            // Recoge el estado del viewModel
+            val uiState by mainViewModel.uiState.collectAsState()
+
+            // Muestra la nueva pantalla
+            ProfileEditScreen(
+                navController = navController,
+                viewModel = mainViewModel, // Pasa el viewModel bueno
+                uiState = uiState
+            )
         }
     }
 }

@@ -16,13 +16,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val mainViewModel: MainViewModel = viewModel()
             val darkTheme by mainViewModel.darkTheme.collectAsState()
-            TeaMusic_Grupo11Theme(darkTheme = darkTheme, dynamicColor = false) {
-                AppNavigation()
-            }
 
             TeaMusic_Grupo11Theme(darkTheme = darkTheme, dynamicColor = false) {
-                AppNavigation()
+
+                AppNavigation(mainViewModel)
             }
+
         }
     }
 }
