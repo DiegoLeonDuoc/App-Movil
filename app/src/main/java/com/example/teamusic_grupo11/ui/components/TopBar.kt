@@ -26,7 +26,7 @@ fun TopBar(
     scope: CoroutineScope
 ) {
     TopAppBar(
-        title = { Text("Mi App Kotlin") },
+        title = { Text("TeaMusic") },
         // Uso correcto de TopAppBarDefaults.smallTopAppBarColors (Material3)
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
