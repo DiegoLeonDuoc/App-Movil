@@ -7,6 +7,7 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import retrofit2.Response
 
@@ -85,10 +86,11 @@ class YouTubeRepositoryTest : DescribeSpec({
                 val mockResponse = VideoListResponse("youtube#videoListResponse", "etag", mockItems, PageInfo(1, 1))
                 
                 // Paso 2: Configurar el mock para retornar videos en tendencia
+                // Usar any() para el regionCode ya que puede variar
                 coEvery { mockApiService.getTrending(any(), any(), any(), any(), any()) } returns Response.success(mockResponse)
                 
                 // ===== WHEN =====
-                // Paso 3: Obtener videos en tendencia
+                // Paso 3: Obtener videos en tendencia (usando región por defecto "CL")
                 val result = repository.getTrending()
                 
                 // ===== THEN =====
@@ -96,6 +98,34 @@ class YouTubeRepositoryTest : DescribeSpec({
                 result.shouldBeInstanceOf<NetworkResult.Success<VideoListResponse>>()
                 // Paso 5: Verificar que contiene 1 video
                 (result as NetworkResult.Success).data.items.size shouldBe 1
+            }
+            
+            it("debería usar el código de región especificado") {
+                // ===== GIVEN =====
+                val regionCode = "US"
+                val mockItems = listOf(
+                    YouTubeVideoItem(
+                        "456",
+                        Snippet("2023", "channel", "US Trending", "Desc", Thumbnails(), "Channel")
+                    )
+                )
+                val mockResponse = VideoListResponse("youtube#videoListResponse", "etag", mockItems, PageInfo(1, 1))
+                
+                // Configurar el mock para verificar que se pasa el regionCode correcto
+                coEvery { 
+                    mockApiService.getTrending(any(), any(), any(), any(), regionCode) 
+                } returns Response.success(mockResponse)
+                
+                // ===== WHEN =====
+                // Paso 1: Obtener tendencias de Estados Unidos
+                val result = repository.getTrending(regionCode)
+                
+                // ===== THEN =====
+                // Paso 2: Verificar que el resultado es exitoso
+                result.shouldBeInstanceOf<NetworkResult.Success<VideoListResponse>>()
+                
+                // Paso 3: Verificar que se llamó al servicio con el regionCode correcto
+                coVerify { mockApiService.getTrending(any(), any(), any(), any(), "US") }
             }
         }
         

@@ -17,3 +17,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 // Definición de las claves para guardar/leer datos.
 // PROFILE_IMAGE_URI es la clave para guardar la URI de la imagen de perfil del usuario.
 val PROFILE_IMAGE_URI = stringPreferencesKey("profile_image_uri")
+
+// SELECTED_REGION es la clave para guardar el código de región seleccionado (ej: "CL", "US", "MX")
+// Se usa para obtener música en tendencia de diferentes países
+val SELECTED_REGION = stringPreferencesKey("selected_region")

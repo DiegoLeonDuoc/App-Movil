@@ -49,8 +49,8 @@ class YouTubeRepository(
         return safeApiCall { apiService.searchMusic(query, limit = limit) }
     }
     
-    suspend fun getTrending(): NetworkResult<VideoListResponse> {
-        return safeApiCall { apiService.getTrending() }
+    suspend fun getTrending(regionCode: String = "CL"): NetworkResult<VideoListResponse> {
+        return safeApiCall { apiService.getTrending(regionCode = regionCode) }
     }
     
     suspend fun getRecommended(): NetworkResult<SearchResponse> {

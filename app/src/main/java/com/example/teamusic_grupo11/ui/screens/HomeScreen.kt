@@ -1,5 +1,6 @@
 package com.example.teamusic_grupo11.ui.screens
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,23 +34,48 @@ import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import com.example.teamusic_grupo11.ui.components.GridCanciones
 import com.example.teamusic_grupo11.ui.components.RowCanciones
 import com.example.teamusic_grupo11.ui.components.RowCancionesDoble
+import com.example.teamusic_grupo11.ui.components.RegionSelector
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: MainViewModel = viewModel(),
-    playerViewModel: com.example.teamusic_grupo11.viewmodel.PlayerViewModel,
-    musicViewModel: com.example.teamusic_grupo11.viewmodel.MusicViewModel = viewModel()
+    playerViewModel: com.example.teamusic_grupo11.viewmodel.PlayerViewModel
 ) {
+    val context = LocalContext.current
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination
+    
+    // Crear MusicViewModel con Context usando factory
+    val musicViewModel: com.example.teamusic_grupo11.viewmodel.MusicViewModel = viewModel(
+        factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return com.example.teamusic_grupo11.viewmodel.MusicViewModel(context) as T
+            }
+        }
+    )
+    
     val musicState by musicViewModel.uiState.collectAsState()
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.fillMaxSize()
     ) {
+        // Selector de región
+        item {
+            RegionSelector(
+                selectedRegionCode = musicState.selectedRegion,
+                onRegionSelected = { regionCode ->
+                    musicViewModel.setRegion(regionCode)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
+        
         item {
             Text(
                 text = "Bienvenido!",
