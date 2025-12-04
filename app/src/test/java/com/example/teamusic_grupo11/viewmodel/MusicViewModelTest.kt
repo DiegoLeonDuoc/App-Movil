@@ -16,24 +16,39 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 
+/**
+ * Suite de tests para MusicViewModel.
+ * Utiliza Kotest como framework de testing y MockK para crear mocks.
+ * 
+ * @OptIn(ExperimentalCoroutinesApi::class) - Permite usar APIs experimentales de coroutines para testing
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class MusicViewModelTest : DescribeSpec({
+    // Dispatcher de prueba para controlar la ejecución de coroutines en los tests
     val testDispatcher = StandardTestDispatcher()
     
+    // beforeSpec se ejecuta UNA VEZ antes de todos los tests
     beforeSpec {
+        // Configurar el dispatcher principal para usar nuestro testDispatcher
+        // Esto permite controlar cuándo se ejecutan las coroutines en los tests
         Dispatchers.setMain(testDispatcher)
     }
     
+    // afterSpec se ejecuta UNA VEZ después de todos los tests
     afterSpec {
+        // Restaurar el dispatcher principal al valor por defecto
         Dispatchers.resetMain()
     }
     
     describe("MusicViewModel") {
+        // Crear un mock del repositorio que será usado en todos los tests
         val mockRepository = mockk<YouTubeRepository>()
         
         describe("loadTrending") {
-            it("should load trending songs successfully") {
-                // Given
+            it("debería cargar canciones en tendencia exitosamente") {
+                // ===== GIVEN (Dado) - Preparar el escenario del test =====
+                
+                // Paso 1: Crear datos de prueba (mock items)
                 val mockItems = listOf(
                     YouTubeVideoItem(
                         "1",
@@ -45,36 +60,52 @@ class MusicViewModelTest : DescribeSpec({
                     )
                 )
                 val mockResponse = VideoListResponse("kind", "etag", mockItems, PageInfo(2, 2))
-                coEvery { mockRepository.getTrending() } returns NetworkResult.Success(mockResponse)
-                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading // Mock recommended too as init calls it
                 
-                // When
+                // Paso 2: Configurar el comportamiento del mock
+                // Cuando se llame a getTrending(), retornar un resultado exitoso
+                coEvery { mockRepository.getTrending() } returns NetworkResult.Success(mockResponse)
+                // También configurar getRecommended() porque el init del ViewModel lo llama
+                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading
+                
+                // ===== WHEN (Cuando) - Ejecutar la acción a probar =====
+                
+                // Paso 3: Crear el ViewModel (esto automáticamente llama a loadTrending en el init)
                 val viewModel = MusicViewModel(mockRepository)
+                
+                // Paso 4: Avanzar el dispatcher hasta que todas las coroutines terminen
                 testDispatcher.scheduler.advanceUntilIdle()
                 
-                // Then
+                // ===== THEN (Entonces) - Verificar los resultados =====
+                
+                // Paso 5: Verificar que se llamó al método getTrending del repositorio
                 coVerify { mockRepository.getTrending() }
+                
+                // Paso 6: Verificar que el estado del ViewModel contiene 2 canciones
                 viewModel.uiState.value.trendingSongs shouldHaveSize 2
             }
             
-            it("should handle error when loading trending") {
-                // Given
+            it("debería manejar errores al cargar tendencias") {
+                // ===== GIVEN =====
+                // Configurar el mock para retornar un error
                 coEvery { mockRepository.getTrending() } returns NetworkResult.Error("Network error")
                 coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading
                 
-                // When
+                // ===== WHEN =====
                 val viewModel = MusicViewModel(mockRepository)
                 testDispatcher.scheduler.advanceUntilIdle()
                 
-                // Then
+                // ===== THEN =====
+                // Verificar que el mensaje de error se guardó en el estado
                 viewModel.uiState.value.errorMessage shouldBe "Network error"
             }
         }
         
         describe("searchMusic") {
-            it("should search for music successfully") {
-                // Given
+            it("debería buscar música exitosamente") {
+                // ===== GIVEN =====
                 val query = "test query"
+                
+                // Paso 1: Crear datos de búsqueda simulados
                 val mockItems = listOf(
                     YouTubeSearchItem(
                         YouTubeId("video", "3"),
@@ -82,31 +113,38 @@ class MusicViewModelTest : DescribeSpec({
                     )
                 )
                 val mockResponse = SearchResponse("kind", "etag", null, "US", PageInfo(1, 1), mockItems)
+                
+                // Paso 2: Configurar mocks
                 coEvery { mockRepository.searchMusic(query) } returns NetworkResult.Success(mockResponse)
-                coEvery { mockRepository.getTrending() } returns NetworkResult.Loading // Mock init calls
+                coEvery { mockRepository.getTrending() } returns NetworkResult.Loading
                 coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading
                 
-                // When
+                // ===== WHEN =====
                 val viewModel = MusicViewModel(mockRepository)
+                // Paso 3: Ejecutar la búsqueda
                 viewModel.searchMusic(query)
                 testDispatcher.scheduler.advanceUntilIdle()
                 
-                // Then
+                // ===== THEN =====
+                // Paso 4: Verificar que se llamó al método de búsqueda
                 coVerify { mockRepository.searchMusic(query) }
+                // Paso 5: Verificar que hay 1 resultado de búsqueda
                 viewModel.uiState.value.searchResults shouldHaveSize 1
             }
             
-            it("should clear search results when query is blank") {
-                // Given
+            it("debería limpiar resultados de búsqueda cuando la consulta está vacía") {
+                // ===== GIVEN =====
                 coEvery { mockRepository.getTrending() } returns NetworkResult.Loading
                 coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading
                 val viewModel = MusicViewModel(mockRepository)
                 
-                // When
+                // ===== WHEN =====
+                // Buscar con una cadena vacía
                 viewModel.searchMusic("")
                 testDispatcher.scheduler.advanceUntilIdle()
                 
-                // Then
+                // ===== THEN =====
+                // Los resultados de búsqueda deben estar vacíos
                 viewModel.uiState.value.searchResults shouldHaveSize 0
             }
         }

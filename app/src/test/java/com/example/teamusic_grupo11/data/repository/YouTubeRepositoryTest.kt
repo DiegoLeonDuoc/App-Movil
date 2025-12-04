@@ -10,16 +10,29 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import retrofit2.Response
 
+/**
+ * Suite de tests para YouTubeRepository.
+ * Verifica que el repositorio maneje correctamente:
+ * - Llamadas exitosas a la API
+ * - Errores de red
+ * - Respuestas nulas
+ * 
+ * Utiliza MockK para simular el comportamiento del servicio de API.
+ */
 class YouTubeRepositoryTest : DescribeSpec({
     
     describe("YouTubeRepository") {
+        // Paso 1: Crear un mock del servicio de API de YouTube
         val mockApiService = mockk<YouTubeApiService>()
+        // Paso 2: Crear el repositorio con el servicio mockeado
         val repository = YouTubeRepository(mockApiService)
         
         describe("searchMusic") {
-            it("should return success when API call succeeds") {
-                // Given
+            it("debería retornar éxito cuando la llamada a la API tiene éxito") {
+                // ===== GIVEN =====
                 val query = "test"
+                
+                // Paso 1: Crear datos de respuesta simulados
                 val mockItems = listOf(
                     YouTubeSearchItem(
                         YouTubeId("youtube#video", "123"),
@@ -27,32 +40,42 @@ class YouTubeRepositoryTest : DescribeSpec({
                     )
                 )
                 val mockResponse = SearchResponse("youtube#searchListResponse", "etag", null, "US", PageInfo(1, 1), mockItems)
+                
+                // Paso 2: Configurar el mock para retornar una respuesta exitosa
                 coEvery { mockApiService.searchMusic(query, any(), any(), any(), any()) } returns Response.success(mockResponse)
                 
-                // When
+                // ===== WHEN =====
+                // Paso 3: Ejecutar la búsqueda
                 val result = repository.searchMusic(query)
                 
-                // Then
+                // ===== THEN =====
+                // Paso 4: Verificar que el resultado es de tipo Success
                 result.shouldBeInstanceOf<NetworkResult.Success<SearchResponse>>()
+                // Paso 5: Verificar que contiene 1 item
                 (result as NetworkResult.Success).data.items.size shouldBe 1
             }
             
-            it("should return error when API call fails") {
-                // Given
+            it("debería retornar error cuando la llamada a la API falla") {
+                // ===== GIVEN =====
                 val query = "test"
+                
+                // Paso 1: Configurar el mock para retornar un error HTTP 404
                 coEvery { mockApiService.searchMusic(query, any(), any(), any(), any()) } returns Response.error(404, mockk(relaxed = true))
                 
-                // When
+                // ===== WHEN =====
+                // Paso 2: Ejecutar la búsqueda
                 val result = repository.searchMusic(query)
                 
-                // Then
+                // ===== THEN =====
+                // Paso 3: Verificar que el resultado es de tipo Error
                 result.shouldBeInstanceOf<NetworkResult.Error>()
             }
         }
         
         describe("getTrending") {
-            it("should return trending videos on success") {
-                // Given
+            it("debería retornar videos en tendencia en caso de éxito") {
+                // ===== GIVEN =====
+                // Paso 1: Crear datos de videos en tendencia simulados
                 val mockItems = listOf(
                     YouTubeVideoItem(
                         "123",
@@ -60,28 +83,38 @@ class YouTubeRepositoryTest : DescribeSpec({
                     )
                 )
                 val mockResponse = VideoListResponse("youtube#videoListResponse", "etag", mockItems, PageInfo(1, 1))
+                
+                // Paso 2: Configurar el mock para retornar videos en tendencia
                 coEvery { mockApiService.getTrending(any(), any(), any(), any(), any()) } returns Response.success(mockResponse)
                 
-                // When
+                // ===== WHEN =====
+                // Paso 3: Obtener videos en tendencia
                 val result = repository.getTrending()
                 
-                // Then
+                // ===== THEN =====
+                // Paso 4: Verificar que el resultado es exitoso
                 result.shouldBeInstanceOf<NetworkResult.Success<VideoListResponse>>()
+                // Paso 5: Verificar que contiene 1 video
                 (result as NetworkResult.Success).data.items.size shouldBe 1
             }
         }
         
         describe("error handling") {
-            it("should handle null response body") {
-                // Given
+            it("debería manejar cuerpo de respuesta nulo") {
+                // ===== GIVEN =====
+                // Paso 1: Configurar el mock para retornar una respuesta exitosa pero con cuerpo nulo
+                // Esto puede ocurrir en casos raros de problemas de red o servidor
                 coEvery { mockApiService.getTrending(any(), any(), any(), any(), any()) } returns Response.success(null)
                 
-                // When
+                // ===== WHEN =====
+                // Paso 2: Intentar obtener videos en tendencia
                 val result = repository.getTrending()
                 
-                // Then
+                // ===== THEN =====
+                // Paso 3: Verificar que el resultado es un error
                 result.shouldBeInstanceOf<NetworkResult.Error>()
-                (result as NetworkResult.Error).message shouldBe "Empty response body"
+                // Paso 4: Verificar que el mensaje de error es el esperado
+                (result as NetworkResult.Error).message shouldBe "Cuerpo de respuesta vacío"
             }
         }
     }
