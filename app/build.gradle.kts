@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,7 +11,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.appnombre_grupox"
+        applicationId = "com.example.teamusic_grupo11"
         minSdk = 30
         targetSdk = 36
         versionCode = 1
@@ -17,8 +19,14 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
-        // Read API key from host environment variable
-        val apiKey = System.getenv("YOUTUBE_API_KEY") ?: ""
+        // Read API key from local.properties or host environment variable
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+        
+        val apiKey = localProperties.getProperty("YOUTUBE_API_KEY") ?: System.getenv("YOUTUBE_API_KEY") ?: ""
         buildConfigField("String", "YOUTUBE_API_KEY", "\"$apiKey\"")
     }
 

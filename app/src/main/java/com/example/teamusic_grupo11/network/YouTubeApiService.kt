@@ -29,7 +29,7 @@ interface YouTubeApiService {
         @Query("chart") chart: String = "mostPopular", // Lista de populares
         @Query("videoCategoryId") videoCategoryId: String = "10", // 10 corresponde a la categoría de Música
         @Query("maxResults") limit: Int = 20,
-        @Query("regionCode") regionCode: String = "US" // Código de región para las tendencias
+        @Query("regionCode") regionCode: String = "CL" // Código de región para las tendencias
     ): Response<VideoListResponse>
     
     // Para recomendaciones, usamos una búsqueda general de música ya que las recomendaciones personalizadas requieren OAuth
