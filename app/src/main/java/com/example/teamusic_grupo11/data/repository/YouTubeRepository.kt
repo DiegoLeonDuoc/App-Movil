@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class YouTubeRepository(
-    private val apiService: com.example.teamusic_grupo11.network.YouTubeApiService = com.example.teamusic_grupo11.network.ApiClient.apiService
+    private val apiService: com.example.teamusic_grupo11.network.YouTubeApiService = ApiClient.apiService
 ) {
     
     // Helper function to handle API responses

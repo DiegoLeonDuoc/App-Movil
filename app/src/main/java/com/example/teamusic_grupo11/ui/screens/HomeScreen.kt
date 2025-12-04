@@ -1,7 +1,6 @@
 package com.example.teamusic_grupo11.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,12 +15,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,16 +28,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.teamusic_grupo11.data.Songs
-import com.example.teamusic_grupo11.navigation.Screen
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
-import kotlinx.coroutines.launch
-
-import com.example.teamusic_grupo11.ui.components.BottomBar
 import com.example.teamusic_grupo11.ui.components.GridCanciones
 import com.example.teamusic_grupo11.ui.components.RowCanciones
 import com.example.teamusic_grupo11.ui.components.RowCancionesDoble
-import com.example.teamusic_grupo11.ui.components.TopBar
-import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

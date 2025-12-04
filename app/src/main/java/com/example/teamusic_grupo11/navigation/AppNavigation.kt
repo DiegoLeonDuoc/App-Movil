@@ -1,19 +1,14 @@
 package com.example.teamusic_grupo11.navigation
 
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-// --- 1. IMPORTA LO NUEVO ---
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.teamusic_grupo11.ui.screens.ProfileEditScreen
-// --- (fin imports) ---
 import com.example.teamusic_grupo11.ui.screens.BibliotecaScreen
 import com.example.teamusic_grupo11.ui.screens.ExplorarScreen
 import com.example.teamusic_grupo11.ui.screens.HomeScreen

@@ -9,7 +9,6 @@ import com.example.teamusic_grupo11.navigation.AppNavigation
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
-import android.widget.Toast
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

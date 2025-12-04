@@ -29,11 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.teamusic_grupo11.navigation.Screen
-import com.example.teamusic_grupo11.ui.components.TopBar
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import com.example.teamusic_grupo11.viewmodel.UsuarioViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun RegistroScreen(

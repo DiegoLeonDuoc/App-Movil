@@ -46,7 +46,7 @@ class MusicViewModelTest : DescribeSpec({
                 )
                 val mockResponse = VideoListResponse("kind", "etag", mockItems, PageInfo(2, 2))
                 coEvery { mockRepository.getTrending() } returns NetworkResult.Success(mockResponse)
-                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading() // Mock recommended too as init calls it
+                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading // Mock recommended too as init calls it
                 
                 // When
                 val viewModel = MusicViewModel(mockRepository)
@@ -60,7 +60,7 @@ class MusicViewModelTest : DescribeSpec({
             it("should handle error when loading trending") {
                 // Given
                 coEvery { mockRepository.getTrending() } returns NetworkResult.Error("Network error")
-                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading()
+                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading
                 
                 // When
                 val viewModel = MusicViewModel(mockRepository)
@@ -83,8 +83,8 @@ class MusicViewModelTest : DescribeSpec({
                 )
                 val mockResponse = SearchResponse("kind", "etag", null, "US", PageInfo(1, 1), mockItems)
                 coEvery { mockRepository.searchMusic(query) } returns NetworkResult.Success(mockResponse)
-                coEvery { mockRepository.getTrending() } returns NetworkResult.Loading() // Mock init calls
-                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading()
+                coEvery { mockRepository.getTrending() } returns NetworkResult.Loading // Mock init calls
+                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading
                 
                 // When
                 val viewModel = MusicViewModel(mockRepository)
@@ -98,8 +98,8 @@ class MusicViewModelTest : DescribeSpec({
             
             it("should clear search results when query is blank") {
                 // Given
-                coEvery { mockRepository.getTrending() } returns NetworkResult.Loading()
-                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading()
+                coEvery { mockRepository.getTrending() } returns NetworkResult.Loading
+                coEvery { mockRepository.getRecommended() } returns NetworkResult.Loading
                 val viewModel = MusicViewModel(mockRepository)
                 
                 // When
