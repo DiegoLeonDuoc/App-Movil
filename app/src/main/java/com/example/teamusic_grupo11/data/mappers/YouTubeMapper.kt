@@ -5,7 +5,7 @@ import com.example.teamusic_grupo11.data.models.YouTubeVideoItem
 import com.example.teamusic_grupo11.dataDAO.Song
 
 /**
- * Mapper to convert YouTube API models to app's Song model
+ * Mapeador para convertir los modelos de la API de YouTube al modelo Song de la aplicación
  */
 object YouTubeMapper {
     

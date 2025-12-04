@@ -13,14 +13,6 @@ import androidx.compose.runtime.collectAsState
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // Debug check for API Key
-        if (!com.example.teamusic_grupo11.network.ApiConfig.isApiKeyValid()) {
-            android.widget.Toast.makeText(this, "⚠️ API KEY MISSING!", android.widget.Toast.LENGTH_LONG).show()
-        } else {
-            android.widget.Toast.makeText(this, "✅ API Key Loaded", android.widget.Toast.LENGTH_SHORT).show()
-        }
-        
         setContent {
             val mainViewModel: MainViewModel = viewModel()
             val darkTheme by mainViewModel.darkTheme.collectAsState()

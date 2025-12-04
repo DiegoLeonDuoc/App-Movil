@@ -11,30 +11,40 @@ class YouTubeRepository(
     private val apiService: com.example.teamusic_grupo11.network.YouTubeApiService = ApiClient.apiService
 ) {
     
-    // Helper function to handle API responses
+    // Función auxiliar para manejar las respuestas de la API de manera segura.
+    // 'safeApiCall' envuelve la llamada a la red en un bloque try-catch y maneja los errores HTTP.
+    // Recibe una función suspendida 'apiCall' que devuelve un 'Response<T>'.
+    // Devuelve un 'NetworkResult<T>' que puede ser Success o Error.
     private suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): NetworkResult<T> {
+        // 'withContext(Dispatchers.IO)' asegura que la operación se ejecute en el hilo de E/S (Input/Output),
+        // para no bloquear la interfaz de usuario.
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiCall()
+                val response = apiCall() // Ejecuta la llamada a la API
                 if (response.isSuccessful) {
+                    // Si la respuesta es exitosa (código 200-299), devolvemos el cuerpo de la respuesta envuelto en Success.
+                    // 'snippet' es una parte común de la respuesta de YouTube que contiene los metadatos básicos
+                    // (título, descripción, miniaturas, etc.). Aunque aquí manejamos el objeto completo 'T'.
                     response.body()?.let {
                         NetworkResult.Success(it)
-                    } ?: NetworkResult.Error("Empty response body")
+                    } ?: NetworkResult.Error("Cuerpo de respuesta vacío")
                 } else {
+                    // Si la respuesta no es exitosa (ej. 404, 500), devolvemos un Error con el mensaje y código.
                     NetworkResult.Error(
                         message = response.message(),
                         code = response.code()
                     )
                 }
             } catch (e: Exception) {
+                // Si ocurre una excepción (ej. sin internet), devolvemos un Error con el mensaje de la excepción.
                 NetworkResult.Error(
-                    message = e.message ?: "Unknown error occurred"
+                    message = e.message ?: "Ocurrió un error desconocido"
                 )
             }
         }
     }
     
-    // Music operations
+    // Operaciones relacionadas con música
     suspend fun searchMusic(query: String, limit: Int = 20): NetworkResult<SearchResponse> {
         return safeApiCall { apiService.searchMusic(query, limit = limit) }
     }

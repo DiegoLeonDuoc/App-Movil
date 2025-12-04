@@ -2,26 +2,27 @@ package com.example.teamusic_grupo11.data.models
 
 import com.google.gson.annotations.SerializedName
 
-// API Response wrappers for YouTube Data API v3
+// Envoltorios de respuesta de la API para YouTube Data API v3
+// Estas clases representan la respuesta raíz que devuelve la API.
 
 data class SearchResponse(
     @SerializedName("kind")
-    val kind: String,
+    val kind: String, // Tipo de recurso (ej. "youtube#searchListResponse")
     
     @SerializedName("etag")
-    val etag: String,
+    val etag: String, // Etiqueta de entidad para caché
     
     @SerializedName("nextPageToken")
-    val nextPageToken: String? = null,
+    val nextPageToken: String? = null, // Token para pedir la siguiente página de resultados
     
     @SerializedName("regionCode")
     val regionCode: String? = null,
     
     @SerializedName("pageInfo")
-    val pageInfo: PageInfo,
+    val pageInfo: PageInfo, // Información de paginación
     
     @SerializedName("items")
-    val items: List<YouTubeSearchItem>
+    val items: List<YouTubeSearchItem> // La lista real de resultados de búsqueda
 )
 
 data class VideoListResponse(

@@ -2,14 +2,16 @@ package com.example.teamusic_grupo11.data.models
 
 import com.google.gson.annotations.SerializedName
 
-// Common models for YouTube Data API v3
+// Modelos comunes para la API de Datos de YouTube v3
+// Estos modelos reflejan la estructura exacta del JSON que devuelve YouTube.
+// @SerializedName("nombre_json") mapea el campo del JSON a nuestra variable en Kotlin.
 
 data class YouTubeSearchItem(
     @SerializedName("id")
-    val id: YouTubeId,
+    val id: YouTubeId, // Objeto ID que contiene videoId, channelId, etc.
     
     @SerializedName("snippet")
-    val snippet: Snippet
+    val snippet: Snippet // "Snippet" es el resumen del video (título, descripción, etc.)
 )
 
 data class YouTubeVideoItem(
@@ -87,7 +89,7 @@ data class Thumbnail(
 
 data class ContentDetails(
     @SerializedName("duration")
-    val duration: String, // ISO 8601 format, e.g., PT1H2M10S
+    val duration: String, // Formato ISO 8601, ej., PT1H2M10S
     
     @SerializedName("dimension")
     val dimension: String? = null,

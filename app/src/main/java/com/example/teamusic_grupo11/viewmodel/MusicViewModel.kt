@@ -19,15 +19,22 @@ data class MusicUiState(
     val errorMessage: String? = null
 )
 
+// MusicViewModel es el intermediario entre la UI (pantallas) y los datos (Repositorio).
+// Se encarga de gestionar el estado de la pantalla (MusicUiState) y de llamar al repositorio para obtener datos.
+// Sobrevive a cambios de configuración (como rotar la pantalla).
 class MusicViewModel(
     private val repository: YouTubeRepository = YouTubeRepository()
 ) : ViewModel() {
     
+    // _uiState es mutable y privado, solo el ViewModel puede modificarlo.
     private val _uiState = MutableStateFlow(MusicUiState())
+    
+    // uiState es inmutable y público, la UI se suscribe a él para reaccionar a los cambios.
+    // Contiene listas de canciones, estado de carga y mensajes de error.
     val uiState: StateFlow<MusicUiState> = _uiState.asStateFlow()
     
     init {
-        // Load initial data
+        // Cargar datos iniciales al crear el ViewModel
         loadTrending()
         loadRecommended()
     }
@@ -67,10 +74,10 @@ class MusicViewModel(
                     )
                 }
                 is NetworkResult.Error -> {
-                    // Silently fail for recommended, keep existing data
+                    // Fallar silenciosamente para recomendaciones, mantener datos existentes
                 }
                 is NetworkResult.Loading -> {
-                    // No action needed
+                    // No se requiere acción
                 }
             }
         }
