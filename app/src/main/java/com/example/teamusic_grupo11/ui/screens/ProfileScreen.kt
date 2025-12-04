@@ -7,15 +7,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,25 +44,20 @@ fun ProfileScreen (
     var selectedItem by remember { mutableStateOf(1) }
 
     Scaffold(
-        bottomBar = {
-            NavigationBar {
-                items.forEachIndexed { index, screen ->
-                    NavigationBarItem(
-                        selected = selectedItem == index,
-                        onClick = {
-                            selectedItem = index
-                            viewModel.navigateTo(screen)
-                        },
-                        label = { Text(screen.route) },
-                        icon = {
-                            Icon(
-                                imageVector= if (screen == Screen.Home) Icons.Default.Home else Icons.Default.Person,
-                                contentDescription = screen.route
-                            )
-                        }
-                    )
+        topBar = {
+            TopAppBar(
+                title = { Text("Perfil") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                navigationIcon = {
+                    // Usamos el navigateBack del ViewModel
+                    IconButton(onClick = { viewModel.navigateBack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atrás")
+                    }
                 }
-            }
+            )
         }
     ) { innerPadding ->
         Column(

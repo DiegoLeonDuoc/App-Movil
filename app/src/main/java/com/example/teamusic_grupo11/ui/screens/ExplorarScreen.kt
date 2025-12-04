@@ -31,83 +31,42 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ExplorarScreen(
-    navController: NavController,   // Controlador de navegación para moverse entre pantallas
-    viewModel: MainViewModel,        // ViewModel que centraliza la navegación
-    drawerState: DrawerState,
-    scope: CoroutineScope
+    navController: NavController,
+    viewModel: MainViewModel
 ) {
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Text("Menú", modifier = Modifier.padding(16.dp))
-                NavigationDrawerItem(
-                    label = { Text("Perfil")},
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.navigateTo(Screen.Profile)
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Registro") },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.navigateTo(Screen.Registro)
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Configuración") },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.navigateTo(Screen.Settings)
-                    }
-                )
-            }
-        }
+    // Estructura visual centralizada
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Root scaffold: TopAppBar + body content (respects system insets provided by Scaffold)
-        Scaffold(
-            topBar = { TopBar(viewModel, drawerState, scope) },
-            bottomBar = { BottomBar(navController, currentDestination) }
-        ) {
-            // Estructura visual centralizada
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Título
-                Text(text = "Pantalla de configuración")
-                Spacer(modifier = Modifier.height(24.dp))
+        // Título
+        Text(text = "Pantalla de configuración")
+        Spacer(modifier = Modifier.height(24.dp))
 
-                // Botón para volver a home
-                Button(
-                    onClick = {
-                        viewModel.navigateTo(Screen.Home)
-                    }
-                ) {
-                    Text("Volver al Inicio")
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Botón para ir al perfil
-                Button(
-                    onClick = {
-                        viewModel.navigateTo(Screen.Profile)
-                    }
-                ) {
-                    Text("Ir al Perfil")
-                }
+        // Botón para volver a home
+        Button(
+            onClick = {
+                viewModel.navigateTo(Screen.Home)
             }
+        ) {
+            Text("Volver al Inicio")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Botón para ir al perfil
+        Button(
+            onClick = {
+                viewModel.navigateTo(Screen.Profile)
+            }
+        ) {
+            Text("Ir al Perfil")
         }
     }
 }

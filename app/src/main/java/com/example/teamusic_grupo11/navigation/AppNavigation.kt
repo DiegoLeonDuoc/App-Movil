@@ -22,20 +22,21 @@ import com.example.teamusic_grupo11.ui.screens.RegistroScreen
 import com.example.teamusic_grupo11.ui.screens.ResumenScreen
 import com.example.teamusic_grupo11.ui.screens.SettingsScreen
 import com.example.teamusic_grupo11.ui.screens.AppearanceScreen
+import com.example.teamusic_grupo11.ui.screens.MainScreen
+import com.example.teamusic_grupo11.ui.screens.FullPlayerScreen
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
+import com.example.teamusic_grupo11.viewmodel.PlayerViewModel
 import com.example.teamusic_grupo11.viewmodel.UsuarioViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun AppNavigation(mainViewModel: MainViewModel) { // <-- Este es el ViewModel BUENO
-    // val viewModel: MainViewModel = viewModel() // <-- 2. BORRA ESTA LÍNEA (Este era el ViewModel MALO)
+fun AppNavigation(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
-    val usuarioViewModel: UsuarioViewModel = viewModel() // Este está bien, es otro ViewModel
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
+    val usuarioViewModel: UsuarioViewModel = viewModel()
+    val playerViewModel: PlayerViewModel = viewModel()
+    // drawerState and scope are now managed in MainScreen
 
     LaunchedEffect(key1 = Unit) {
-        // 3. Usa el ViewModel BUENO
         mainViewModel.navigationEvents.collectLatest { event ->
             when (event) {
                 is NavigationEvent.NavigateTo -> {
@@ -56,47 +57,55 @@ fun AppNavigation(mainViewModel: MainViewModel) { // <-- Este es el ViewModel BU
         }
     }
 
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Home.route
+    MainScreen(
+        navController = navController, 
+        viewModel = mainViewModel,
+        playerViewModel = playerViewModel
     ) {
-        // 4. Asegúrate de que TODAS las pantallas usen 'mainViewModel'
-        composable(route = Screen.Home.route) {
-            HomeScreen(navController = navController, viewModel = mainViewModel, drawerState, scope)
-        }
-        composable(route = Screen.Profile.route) {
-            ProfileScreen(navController = navController, viewModel = mainViewModel)
-        }
-        composable(route = Screen.Settings.route) {
-            SettingsScreen(navController = navController, viewModel = mainViewModel)
-        }
-        composable(route = Screen.Appearance.route) {
-            AppearanceScreen(navController = navController, viewModel = mainViewModel)
-        }
-        composable(route=Screen.Resumen.route) {
-            ResumenScreen(usuarioViewModel)
-        }
-        composable(Screen.Registro.route) {
-            RegistroScreen(navController,usuarioViewModel, mainViewModel, drawerState, scope)
-        }
-        composable(Screen.Explore.route) {
-            ExplorarScreen(navController, viewModel = mainViewModel, drawerState, scope)
-        }
-        composable(Screen.Library.route) {
-            BibliotecaScreen(navController, mainViewModel, drawerState, scope)
-        }
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Home.route
+        ) {
+            composable(route = Screen.Home.route) {
+                HomeScreen(navController = navController, viewModel = mainViewModel, playerViewModel = playerViewModel)
+            }
+            composable(route = Screen.Profile.route) {
+                ProfileScreen(navController = navController, viewModel = mainViewModel)
+            }
+            composable(route = Screen.Settings.route) {
+                SettingsScreen(navController = navController, viewModel = mainViewModel)
+            }
+            composable(route = Screen.Appearance.route) {
+                AppearanceScreen(navController = navController, viewModel = mainViewModel)
+            }
+            composable(route=Screen.Resumen.route) {
+                ResumenScreen(usuarioViewModel)
+            }
+            composable(Screen.Registro.route) {
+                RegistroScreen(navController,usuarioViewModel, mainViewModel)
+            }
+            composable(Screen.Explore.route) {
+                ExplorarScreen(navController, viewModel = mainViewModel)
+            }
+            composable(Screen.Library.route) {
+                BibliotecaScreen(navController, mainViewModel)
+            }
 
-        // --- 5. AÑADE ESTE BLOQUE AL FINAL ---
-        composable(route = Screen.ProfileEdit.route) {
-            // Recoge el estado del viewModel
-            val uiState by mainViewModel.uiState.collectAsState()
+            composable(route = Screen.ProfileEdit.route) {
+                val uiState by mainViewModel.uiState.collectAsState()
+                ProfileEditScreen(
+                    navController = navController,
+                    viewModel = mainViewModel,
+                    uiState = uiState
+                )
+            }
 
-            // Muestra la nueva pantalla
-            ProfileEditScreen(
-                navController = navController,
-                viewModel = mainViewModel, // Pasa el viewModel bueno
-                uiState = uiState
-            )
+            composable(route = Screen.Player.route) {
+                FullPlayerScreen(
+                    navController = navController,
+                    playerViewModel = playerViewModel
+                )
+            }
         }
     }
 }

@@ -47,78 +47,35 @@ import com.example.teamusic_grupo11.ui.components.DialogFuncionPendiente
 
 @Composable
 fun BibliotecaScreen(
-    navController: NavController,   // Controlador de navegación para moverse entre pantallas
-    viewModel: MainViewModel,        // ViewModel que centraliza la navegación
-    drawerState: DrawerState,
-    scope: CoroutineScope
+    navController: NavController,
+    viewModel: MainViewModel
 ) {
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination
     var showDialog by remember { mutableStateOf(false) }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Text("Menú", modifier = Modifier.padding(16.dp))
-                NavigationDrawerItem(
-                    label = { Text("Perfil") },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.navigateTo(Screen.Profile)
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Registro") },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.navigateTo(Screen.Registro)
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Configuración") },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.navigateTo(Screen.Settings)
-                    }
-                )
-            }
-        }
+    Row(
+        modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
     ) {
-        // Root scaffold: TopAppBar + body content (respects system insets provided by Scaffold)
-        Scaffold(
-            topBar = { TopBar(viewModel, drawerState, scope) },
-            bottomBar = { BottomBar(navController, currentDestination) }
-        ) { innerPadding ->
-
-            Row(
-                modifier = Modifier
-                            .padding(innerPadding)
-                            .horizontalScroll(rememberScrollState())
-            ) {
-                val bloques = listOf("Lista de reproducción", "Canciones", "Álbumes", "Artistas")
-                bloques.forEach { bloque ->
-                    Button(
-                        onClick = {
-                            showDialog = true
-                        }
-                    ) {
-                        Text(bloque, color = MaterialTheme.colorScheme.onPrimary)
-                    }
+        val bloques = listOf("Lista de reproducción", "Canciones", "Álbumes", "Artistas")
+        bloques.forEach { bloque ->
+            Button(
+                onClick = {
+                    showDialog = true
                 }
-
+            ) {
+                Text(bloque, color = MaterialTheme.colorScheme.onPrimary)
             }
-
-            DialogFuncionPendiente(
-                show = showDialog,
-                onDismiss = { showDialog = false }
-            )
         }
+
     }
+
+    DialogFuncionPendiente(
+        show = showDialog,
+        onDismiss = { showDialog = false }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

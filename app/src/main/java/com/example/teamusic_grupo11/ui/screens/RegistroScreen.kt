@@ -39,125 +39,82 @@ import kotlinx.coroutines.launch
 fun RegistroScreen(
     navController: NavController,
     userViewModel: UsuarioViewModel,
-    viewModel: MainViewModel = viewModel(),
-    drawerState: DrawerState,
-    scope: CoroutineScope
+    viewModel: MainViewModel = viewModel()
 ) {
     val estado by userViewModel.estado.collectAsState()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Text("Menú", modifier = Modifier.padding(16.dp))
-                NavigationDrawerItem(
-                    label = { Text("Perfil")},
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.navigateTo(Screen.Profile)
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Registro") },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.navigateTo(Screen.Registro)
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Configuración") },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.navigateTo(Screen.Settings)
-                    }
-                )
-            }
-        }
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Scaffold(
-            topBar = {
-                TopBar(viewModel, drawerState, scope)
-            }
-        ) { innerPadding ->
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                // Campo nombre
-                OutlinedTextField(
-                    value = estado.nombre,
-                    onValueChange = userViewModel::onNombreChange,
-                    label = { Text(text = "Nombre de usuario") },
-                    isError = estado.errores.nombre != null,
-                    supportingText = {
-                        estado.errores.nombre?.let {
-                            Text(text = it, color = colorScheme.error)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                // Campo clave
-                OutlinedTextField(
-                    value = estado.clave,
-                    onValueChange = userViewModel::onClaveChange,
-                    label = { Text(text = "Contraseña") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    isError = estado.errores.clave != null,
-                    supportingText = {
-                        estado.errores.clave?.let {
-                            Text(text = it, color = colorScheme.error)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                // Campo correo
-                OutlinedTextField(
-                    value = estado.correo,
-                    onValueChange = userViewModel::onCorreoChange,
-                    label = { Text(text = "Correo") },
-                    isError = estado.errores.correo != null,
-                    supportingText = {
-                        estado.errores.correo?.let {
-                            Text(text = it, color = colorScheme.error)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                // Checkbox de términos y condiciones
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = estado.aceptaTerminos,
-                        onCheckedChange = userViewModel::onAceptarTerminosChange
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Acepto los términos y condiciones",
-                        style = MaterialTheme.typography.bodySmall
-                    )
+        // Campo nombre
+        OutlinedTextField(
+            value = estado.nombre,
+            onValueChange = userViewModel::onNombreChange,
+            label = { Text(text = "Nombre de usuario") },
+            isError = estado.errores.nombre != null,
+            supportingText = {
+                estado.errores.nombre?.let {
+                    Text(text = it, color = colorScheme.error)
                 }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-                // Botón enviar
-                Button(
-                    onClick = {
-                        if (userViewModel.validarFormulario()) {
-                            navController.navigate(Screen.Resumen.route)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Registrar")
+        // Campo clave
+        OutlinedTextField(
+            value = estado.clave,
+            onValueChange = userViewModel::onClaveChange,
+            label = { Text(text = "Contraseña") },
+            visualTransformation = PasswordVisualTransformation(),
+            isError = estado.errores.clave != null,
+            supportingText = {
+                estado.errores.clave?.let {
+                    Text(text = it, color = colorScheme.error)
                 }
-            }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // Campo correo
+        OutlinedTextField(
+            value = estado.correo,
+            onValueChange = userViewModel::onCorreoChange,
+            label = { Text(text = "Correo") },
+            isError = estado.errores.correo != null,
+            supportingText = {
+                estado.errores.correo?.let {
+                    Text(text = it, color = colorScheme.error)
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // Checkbox de términos y condiciones
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = estado.aceptaTerminos,
+                onCheckedChange = userViewModel::onAceptarTerminosChange
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Acepto los términos y condiciones",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
+        // Botón enviar
+        Button(
+            onClick = {
+                if (userViewModel.validarFormulario()) {
+                    navController.navigate(Screen.Resumen.route)
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Registrar")
         }
     }
-
 }

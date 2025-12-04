@@ -64,13 +64,6 @@ fun SettingsScreen(
             )
         }
     ) { innerPadding ->
-        IconButton(onClick = { /* abrir perfil u otra acción */ }) {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "Acceso a perfil"
-            )
-        }
-
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
