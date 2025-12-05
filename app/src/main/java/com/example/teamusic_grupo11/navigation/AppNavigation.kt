@@ -17,8 +17,8 @@ import com.example.teamusic_grupo11.ui.screens.RegistroScreen
 import com.example.teamusic_grupo11.ui.screens.ResumenScreen
 import com.example.teamusic_grupo11.ui.screens.SettingsScreen
 import com.example.teamusic_grupo11.ui.screens.AppearanceScreen
-import com.example.teamusic_grupo11.ui.screens.MainScreen
 import com.example.teamusic_grupo11.ui.screens.FullPlayerScreen
+import com.example.teamusic_grupo11.ui.screens.MainScreen
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import com.example.teamusic_grupo11.viewmodel.PlayerViewModel
 import com.example.teamusic_grupo11.viewmodel.UsuarioViewModel
@@ -53,7 +53,7 @@ fun AppNavigation(mainViewModel: MainViewModel) {
     }
 
     MainScreen(
-        navController = navController, 
+        navController = navController,
         viewModel = mainViewModel,
         playerViewModel = playerViewModel
     ) {
@@ -62,28 +62,52 @@ fun AppNavigation(mainViewModel: MainViewModel) {
             startDestination = Screen.Home.route
         ) {
             composable(route = Screen.Home.route) {
-                HomeScreen(navController = navController, viewModel = mainViewModel, playerViewModel = playerViewModel)
+                HomeScreen(
+                    navController = navController,
+                    viewModel = mainViewModel,
+                    playerViewModel = playerViewModel
+                )
             }
             composable(route = Screen.Profile.route) {
-                ProfileScreen(navController = navController, viewModel = mainViewModel)
+                ProfileScreen(
+                    navController = navController,
+                    viewModel = mainViewModel
+                )
             }
             composable(route = Screen.Settings.route) {
-                SettingsScreen(navController = navController, viewModel = mainViewModel)
+                SettingsScreen(
+                    navController = navController,
+                    viewModel = mainViewModel
+                )
             }
             composable(route = Screen.Appearance.route) {
-                AppearanceScreen(navController = navController, viewModel = mainViewModel)
+                AppearanceScreen(
+                    navController = navController,
+                    viewModel = mainViewModel
+                )
             }
-            composable(route=Screen.Resumen.route) {
+            composable(route = Screen.Resumen.route) {
                 ResumenScreen(usuarioViewModel)
             }
             composable(Screen.Registro.route) {
-                RegistroScreen(navController,usuarioViewModel, mainViewModel)
+                RegistroScreen(
+                    navController = navController,
+                    userViewModel = usuarioViewModel,
+                    viewModel = mainViewModel
+                )
             }
             composable(Screen.Explore.route) {
-                ExplorarScreen(navController, viewModel = mainViewModel)
+                ExplorarScreen(
+                    navController = navController,
+                    viewModel = mainViewModel
+                )
             }
             composable(Screen.Library.route) {
-                BibliotecaScreen(navController, mainViewModel)
+                BibliotecaScreen(
+                    navController = navController,
+                    viewModel = mainViewModel,
+                    playerViewModel = playerViewModel  // ¡Este es el parámetro que faltaba!
+                )
             }
 
             composable(route = Screen.ProfileEdit.route) {

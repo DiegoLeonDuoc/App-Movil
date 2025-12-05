@@ -32,13 +32,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.teamusic_grupo11.viewmodel.MainViewModel
 import com.example.teamusic_grupo11.ui.components.DialogFuncionPendiente
-
+import com.example.teamusic_grupo11.viewmodel.PlayerViewModel
 
 
 @Composable
 fun BibliotecaScreen(
     navController: NavController,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    playerViewModel: PlayerViewModel
 ) {
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
